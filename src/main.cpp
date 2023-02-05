@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <stdlib.h>
+
+#include "secrets.h"
 #include "timer_functions.h"
 #include "moisture_sensor.h"
 #include "water_level_sensor.h"
@@ -10,8 +13,8 @@
 #define W_LEVEL_POWER 25
 #define PUMP_1_POWER 26
 
-const char *ssid = "Healthy_Design_&_Sick_Machines";
-const char *password = "Bakterien_und_Viren";
+const char *ssid = SECRET_SSID;
+const char *password = SECRET_PASS;
 
 bool output = false;
 
