@@ -1,0 +1,1 @@
+int getWaterLevel(int GPIO_pin, int POWER_IN);
