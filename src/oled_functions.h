@@ -1,4 +1,5 @@
 #include "timer_functions.h"
+#include "constants.h"
 void displayLoading();
 void sleepAnnouncement();
 void displayInit();

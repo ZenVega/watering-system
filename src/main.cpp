@@ -26,8 +26,6 @@ using namespace std;
 const char *ssid = SECRET_SSID;
 const char *password = SECRET_PASS;
 
-int start_watering_time = 19;
-int end_watering_time = 20;
 bool online = false;
 int flashcounter = 0;
 
@@ -63,8 +61,7 @@ void loop()
 {
 
   Time time = getTime();
-  string time_string;
-  boolean watering_time = isWateringTime(time.hours, start_watering_time, end_watering_time);
+  boolean watering_time = isWateringTime(time.hours, START_WATERING_TIME, END_WATERING_TIME);
 
   int moisture_Percentage = readSensor(AOUT_PIN_MOISTURE_1);
   // Serial.print("Moisture: ");
@@ -78,7 +75,8 @@ void loop()
   // Serial.println("_______________________________________");
   displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
   // waterForSeconds(PUMP_1_SIGNAL, 4);
-  delay(400);
+  delay(2000);
+  getSecondsTillWakeUp();
   send_sleeping();
   // waterForSeconds(PUMP_1_SIGNAL, 3);
 };

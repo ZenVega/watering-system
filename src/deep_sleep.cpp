@@ -2,6 +2,7 @@
 #include "oled_functions.h"
 #include "constants.h"
 #include "watering.h"
+#include "timer_functions.h"
 
 void send_sleeping()
 {
@@ -41,3 +42,29 @@ void wake_up_and_react()
     break;
   }
 };
+
+int getSecondsTillWakeUp()
+{
+  int minutes_remaining;
+  Time current_time = getTime();
+
+  if (current_time.hours >= START_WATERING_TIME)
+  {
+    // get minutes till midnight
+    Serial.print(current_time.hours);
+    Serial.print(":");
+    Serial.print(current_time.minutes);
+    Serial.println(" Uhr");
+    minutes_remaining = (24 * 60) - (current_time.minutes) - (current_time.hours * 60);
+    Serial.print(minutes_remaining);
+    Serial.println(" minutes till midnight");
+    minutes_remaining += (START_WATERING_TIME * 60);
+  }
+  else
+  {
+    minutes_remaining = (START_WATERING_TIME * 60) - current_time.minutes - (current_time.hours * 60);
+  }
+  Serial.print(minutes_remaining);
+  Serial.println(" minutes left");
+  return minutes_remaining;
+}
