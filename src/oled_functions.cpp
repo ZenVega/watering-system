@@ -113,4 +113,5 @@ void sleepAnnouncement()
   display.print("z");
   display.display();
   delay(1000);
+  display.clearDisplay();
 }

@@ -38,7 +38,6 @@ void setup()
   displayInit();
   displayLoading();
   delay(500);
-  print_wakeup_reason();
 
   // connect to WIFI
   Serial.print("Connecting to ");
@@ -57,6 +56,7 @@ void setup()
   // Define Power Output Pins
   pinMode(W_LEVEL_POWER, OUTPUT);
   pinMode(PUMP_1_SIGNAL, OUTPUT);
+  wake_up_and_react();
 };
 
 void loop()
@@ -79,5 +79,6 @@ void loop()
   displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
   // waterForSeconds(PUMP_1_SIGNAL, 4);
   delay(400);
-  // send_sleeping();
+  send_sleeping();
+  // waterForSeconds(PUMP_1_SIGNAL, 3);
 };
