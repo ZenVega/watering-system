@@ -35,3 +35,15 @@ Time getTime()
   }
   return {hour, minutes};
 };
+
+boolean isWateringTime(int current_hour, int minTime, int maxTime)
+{
+  if (minTime <= current_hour && maxTime > current_hour)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+};

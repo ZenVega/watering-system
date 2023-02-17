@@ -32,13 +32,11 @@
 
 using namespace std;
 
-// Adafruit_SH1107 display(SCREEN_WIDTH, SCREEN_HEIGHT,
-//                         OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-
 const char *ssid = SECRET_SSID;
 const char *password = SECRET_PASS;
 
-bool output = false;
+int start_watering_time = 19;
+int end_watering_time = 20;
 bool online = false;
 int flashcounter = 0;
 
@@ -47,8 +45,6 @@ void setup()
   Serial.begin(9600);
 
   displayInit();
-  // display.begin(0x3D, true); // Address 0x3D default
-  // display.clearDisplay();
   displayLoading();
 
   // connect to WIFI
@@ -62,6 +58,7 @@ void setup()
   }
   Serial.println("");
   Serial.println("WiFi connected.");
+  online = true;
   delay(500);
 
   // Define Power Output Pins
@@ -74,6 +71,7 @@ void loop()
 
   Time time = getTime();
   string time_string;
+  boolean watering_time = isWateringTime(time.hours, start_watering_time, end_watering_time);
 
   int moisture_Percentage = readSensor(AOUT_PIN_MOISTURE_1);
   // Serial.print("Moisture: ");
@@ -85,6 +83,6 @@ void loop()
   // Serial.println(water_level);
 
   // Serial.println("_______________________________________");
-  displayInfo(true, true, time, flashcounter, moisture_Percentage, water_level);
-  delay(100);
+  displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
+  delay(400);
 };
