@@ -1,0 +1,1 @@
+void waterForSeconds(int PIN, int seconds);

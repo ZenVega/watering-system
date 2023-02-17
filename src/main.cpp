@@ -9,18 +9,15 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 
+#include "constants.h"
 #include "secrets.h"
+
 #include "timer_functions.h"
 #include "deep_sleep.h"
 #include "oled_functions.h"
-#include "moisture_sensor.h"
-#include "water_level_sensor.h"
-
-#define AOUT_PIN_MOISTURE_1 32
-
-#define AOUT_PIN_W_LEVEL_1 33
-#define W_LEVEL_POWER 25
-#define PUMP_1_POWER 26
+#include "sensors/moisture_sensor.h"
+#include "sensors/water_level_sensor.h"
+#include "watering.h"
 
 // RTC_DATA_ATTR int bootCount = 0;
 
@@ -40,6 +37,8 @@ void setup()
 
   displayInit();
   displayLoading();
+  delay(500);
+  print_wakeup_reason();
 
   // connect to WIFI
   Serial.print("Connecting to ");
@@ -57,26 +56,7 @@ void setup()
 
   // Define Power Output Pins
   pinMode(W_LEVEL_POWER, OUTPUT);
-  pinMode(PUMP_1_POWER, OUTPUT);
-
-  // ++bootCount;
-  // Serial.println("Boot number: " + String(bootCount));
-
-  // Print the wakeup reason for ESP32
-  print_wakeup_reason();
-
-  /*
-  First we configure the wake up source
-  We set our ESP32 to wake up every 5 seconds
-  */
-  // esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  // Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
-  //                " Seconds");
-
-  // Serial.println("Going to sleep now");
-  // delay(1000);
-  // Serial.flush();
-  // esp_deep_sleep_start();
+  pinMode(PUMP_1_SIGNAL, OUTPUT);
 };
 
 void loop()
@@ -97,6 +77,7 @@ void loop()
 
   // Serial.println("_______________________________________");
   displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
+  // waterForSeconds(PUMP_1_SIGNAL, 4);
   delay(400);
-  send_sleeping();
+  // send_sleeping();
 };
