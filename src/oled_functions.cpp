@@ -76,3 +76,41 @@ void displayInfo(bool online, bool watering_time, Time time, int &flashcounter, 
 
   display.display();
 };
+
+void sleepAnnouncement()
+{
+  display.clearDisplay();
+  display.setTextSize(1);
+
+  display.setCursor(0, 40);
+  display.print("z");
+  display.display();
+  delay(200);
+
+  display.setTextSize(2);
+  display.print("z");
+  display.display();
+  delay(200);
+
+  display.setTextSize(3);
+  display.print("z");
+  display.display();
+  delay(500);
+
+  display.setTextSize(3);
+
+  display.setCursor(40, 80);
+  display.print("z");
+  display.display();
+  delay(200);
+
+  display.setTextSize(4);
+  display.print("z");
+  display.display();
+  delay(200);
+
+  display.setTextSize(5);
+  display.print("z");
+  display.display();
+  delay(1000);
+}

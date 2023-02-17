@@ -11,9 +11,10 @@
 
 #include "secrets.h"
 #include "timer_functions.h"
+#include "deep_sleep.h"
+#include "oled_functions.h"
 #include "moisture_sensor.h"
 #include "water_level_sensor.h"
-#include "oled_functions.h"
 
 #define AOUT_PIN_MOISTURE_1 32
 
@@ -21,14 +22,7 @@
 #define W_LEVEL_POWER 25
 #define PUMP_1_POWER 26
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 128
-
-#define OLED_MOSI 23
-#define OLED_CLK 18
-#define OLED_DC 16
-#define OLED_CS 5
-#define OLED_RESET -1
+// RTC_DATA_ATTR int bootCount = 0;
 
 using namespace std;
 
@@ -64,6 +58,25 @@ void setup()
   // Define Power Output Pins
   pinMode(W_LEVEL_POWER, OUTPUT);
   pinMode(PUMP_1_POWER, OUTPUT);
+
+  // ++bootCount;
+  // Serial.println("Boot number: " + String(bootCount));
+
+  // Print the wakeup reason for ESP32
+  print_wakeup_reason();
+
+  /*
+  First we configure the wake up source
+  We set our ESP32 to wake up every 5 seconds
+  */
+  // esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  // Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
+  //                " Seconds");
+
+  // Serial.println("Going to sleep now");
+  // delay(1000);
+  // Serial.flush();
+  // esp_deep_sleep_start();
 };
 
 void loop()
@@ -85,4 +98,5 @@ void loop()
   // Serial.println("_______________________________________");
   displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
   delay(400);
+  send_sleeping();
 };
