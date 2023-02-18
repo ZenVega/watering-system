@@ -77,10 +77,15 @@ void displayInfo(bool online, bool watering_time, Time time, int &flashcounter, 
   display.display();
 };
 
-void sleepAnnouncement()
+void sleepAnnouncement(int seconds_to_sleep)
 {
   display.clearDisplay();
   display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("sleeping for");
+  display.setCursor(0, 10);
+  display.print(seconds_to_sleep / 60 / 60);
+  display.println("hours");
 
   display.setCursor(0, 40);
   display.print("z");

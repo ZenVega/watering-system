@@ -4,15 +4,6 @@
 #include "watering.h"
 #include "timer_functions.h"
 
-void send_sleeping()
-{
-  // esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  esp_sleep_enable_ext0_wakeup(GPIO_NUM_12, HIGH);
-  sleepAnnouncement();
-  sleepAnnouncement();
-  esp_deep_sleep_start();
-}
-
 void wake_up_and_react()
 {
   esp_sleep_wakeup_cause_t wakeup_reason;
@@ -51,13 +42,7 @@ int getSecondsTillWakeUp()
   if (current_time.hours >= START_WATERING_TIME)
   {
     // get minutes till midnight
-    Serial.print(current_time.hours);
-    Serial.print(":");
-    Serial.print(current_time.minutes);
-    Serial.println(" Uhr");
     minutes_remaining = (24 * 60) - (current_time.minutes) - (current_time.hours * 60);
-    Serial.print(minutes_remaining);
-    Serial.println(" minutes till midnight");
     minutes_remaining += (START_WATERING_TIME * 60);
   }
   else
@@ -66,5 +51,15 @@ int getSecondsTillWakeUp()
   }
   Serial.print(minutes_remaining);
   Serial.println(" minutes left");
-  return minutes_remaining;
+  return minutes_remaining * 60;
+}
+
+void send_sleeping()
+{
+  int seconds_to_sleep = getSecondsTillWakeUp();
+  esp_sleep_enable_timer_wakeup(seconds_to_sleep * uS_TO_S_FACTOR);
+  esp_sleep_enable_ext0_wakeup(GPIO_INTERRUPT, HIGH);
+  sleepAnnouncement(seconds_to_sleep);
+  Serial.println("Ciao");
+  esp_deep_sleep_start();
 }

@@ -19,15 +19,20 @@
 #include "sensors/water_level_sensor.h"
 #include "watering.h"
 
-// RTC_DATA_ATTR int bootCount = 0;
-
 using namespace std;
 
 const char *ssid = SECRET_SSID;
 const char *password = SECRET_PASS;
 
 bool online = false;
+bool sleepInterruptor = false;
 int flashcounter = 0;
+
+void IRAM_ATTR interruptCall()
+{
+  Serial.println("INTERRUPT");
+  sleepInterruptor = true;
+}
 
 void setup()
 {
@@ -54,29 +59,37 @@ void setup()
   // Define Power Output Pins
   pinMode(W_LEVEL_POWER, OUTPUT);
   pinMode(PUMP_1_SIGNAL, OUTPUT);
+  pinMode(GPIO_INTERRUPT, PULLDOWN);
   wake_up_and_react();
+  attachInterrupt(GPIO_INTERRUPT, interruptCall, RISING);
+  Serial.print("loading");
 };
 
 void loop()
 {
-
   Time time = getTime();
+  while (time.hours == 1 && time.minutes == 0)
+  {
+    Serial.print(".");
+    delay(400);
+    return;
+  }
+
   boolean watering_time = isWateringTime(time.hours, START_WATERING_TIME, END_WATERING_TIME);
 
-  int moisture_Percentage = readSensor(AOUT_PIN_MOISTURE_1);
-  // Serial.print("Moisture: ");
-  // Serial.print(moisture_Percentage);
-  // Serial.println("%");
+  if (watering_time && !sleepInterruptor)
+  {
+    Serial.println("WateringTime");
+    int moisture_Percentage = readSensor(AOUT_PIN_MOISTURE_1);
 
-  int water_level = getWaterLevel(AOUT_PIN_W_LEVEL_1, W_LEVEL_POWER);
-  // Serial.print("Water-Level: ");
-  // Serial.println(water_level);
-
-  // Serial.println("_______________________________________");
-  displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
-  // waterForSeconds(PUMP_1_SIGNAL, 4);
-  delay(2000);
-  getSecondsTillWakeUp();
-  send_sleeping();
-  // waterForSeconds(PUMP_1_SIGNAL, 3);
+    int water_level = getWaterLevel(AOUT_PIN_W_LEVEL_1, W_LEVEL_POWER);
+    displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
+    delay(2000);
+  }
+  else
+  {
+    Serial.println("Sleeeeeping");
+    sleepInterruptor = false;
+    send_sleeping();
+  }
 };
