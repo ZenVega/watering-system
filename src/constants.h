@@ -5,6 +5,7 @@
 #define mS_TO_S_FACTOR 1000       /* Conversion factor for milli seconds to seconds */
 
 #define GPIO_INTERRUPT GPIO_NUM_12
+#define GPIO_OLED_VCC 13
 #define AOUT_PIN_MOISTURE_1 32
 #define AOUT_PIN_W_LEVEL_1 33
 #define W_LEVEL_POWER 25

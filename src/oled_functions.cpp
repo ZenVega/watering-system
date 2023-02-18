@@ -21,6 +21,7 @@ Adafruit_SH1107 display(SCREEN_WIDTH, SCREEN_HEIGHT,
 void displayInit()
 {
   display.begin(0x3D, true); // Address 0x3D default
+  display.setRotation(1);
   display.clearDisplay();
 };
 

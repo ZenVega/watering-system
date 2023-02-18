@@ -37,6 +37,8 @@ void IRAM_ATTR interruptCall()
 void setup()
 {
   Serial.begin(9600);
+  pinMode(GPIO_OLED_VCC, OUTPUT);
+  digitalWrite(GPIO_OLED_VCC, HIGH);
 
   displayInit();
   displayLoading();

@@ -51,7 +51,7 @@ int getSecondsTillWakeUp()
     minutes_remaining = (START_WATERING_TIME * 60) - current_time.minutes - (current_time.hours * 60);
   }
   Serial.print(minutes_remaining);
-  Serial.println(" minutes left");
+  Serial.println(" minutes till wake");
   return minutes_remaining * 60;
 }
 
@@ -63,6 +63,6 @@ void send_sleeping()
   esp_sleep_enable_ext0_wakeup(GPIO_INTERRUPT, HIGH);
   sleepAnnouncement(seconds_to_sleep);
   Serial.println("Ciao");
-  // display.ssd
+  digitalWrite(GPIO_OLED_VCC, LOW);
   esp_deep_sleep_start();
 }
