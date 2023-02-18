@@ -74,7 +74,7 @@ void loop()
     delay(400);
     return;
   }
-
+  Serial.println("");
   boolean watering_time = isWateringTime(time.hours, START_WATERING_TIME, END_WATERING_TIME);
 
   if (watering_time && !sleepInterruptor)

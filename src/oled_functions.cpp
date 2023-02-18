@@ -2,6 +2,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include "timer_functions.h"
+#include <string>
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 128
@@ -80,12 +81,13 @@ void displayInfo(bool online, bool watering_time, Time time, int &flashcounter, 
 void sleepAnnouncement(int seconds_to_sleep)
 {
   display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(0, 0);
+  display.setTextSize(1.7);
+  display.setCursor(0, 3);
   display.print("sleeping for");
-  display.setCursor(0, 10);
+  display.setCursor(0, 16);
   display.print(seconds_to_sleep / 60 / 60);
   display.println("hours");
+  display.display();
 
   display.setCursor(0, 40);
   display.print("z");
@@ -119,4 +121,13 @@ void sleepAnnouncement(int seconds_to_sleep)
   display.display();
   delay(1000);
   display.clearDisplay();
+}
+
+void displayText(const char *message)
+{
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, 4);
+  display.print(message);
+  display.display();
 }

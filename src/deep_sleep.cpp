@@ -14,7 +14,8 @@ void wake_up_and_react()
   {
   case ESP_SLEEP_WAKEUP_EXT0:
     Serial.println("Wakeup caused by external signal using RTC_IO");
-    waterForSeconds(PUMP_1_SIGNAL, 3);
+    displayText("CALIMERA!");
+    delay(1000);
     break;
   case ESP_SLEEP_WAKEUP_EXT1:
     Serial.println("Wakeup caused by external signal using RTC_CNTL");
@@ -57,9 +58,11 @@ int getSecondsTillWakeUp()
 void send_sleeping()
 {
   int seconds_to_sleep = getSecondsTillWakeUp();
+  unsigned long long total_micro_seconds = seconds_to_sleep * uS_TO_S_FACTOR;
   esp_sleep_enable_timer_wakeup(seconds_to_sleep * uS_TO_S_FACTOR);
   esp_sleep_enable_ext0_wakeup(GPIO_INTERRUPT, HIGH);
   sleepAnnouncement(seconds_to_sleep);
   Serial.println("Ciao");
+  // display.ssd
   esp_deep_sleep_start();
 }
