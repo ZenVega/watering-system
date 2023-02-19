@@ -4,7 +4,7 @@
 #include "watering.h"
 #include "timer_functions.h"
 
-void wake_up_and_react()
+void wake_up_and_react(bool &wakeInterruptor)
 {
   esp_sleep_wakeup_cause_t wakeup_reason;
 
@@ -13,8 +13,7 @@ void wake_up_and_react()
   switch (wakeup_reason)
   {
   case ESP_SLEEP_WAKEUP_EXT0:
-    Serial.println("Wakeup caused by external signal using RTC_IO");
-    displayText("CALIMERA!");
+    wakeInterruptor = true;
     delay(1000);
     break;
   case ESP_SLEEP_WAKEUP_EXT1:
