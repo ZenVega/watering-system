@@ -20,3 +20,11 @@ void waterForSeconds(int PIN, int seconds)
   Serial.println("End watering");
   stop_watering(PIN);
 }
+void flashLEDs()
+{
+  pinMode(REFILL_LED, OUTPUT);
+  digitalWrite(REFILL_LED, HIGH);
+  delay(500);
+  digitalWrite(REFILL_LED, LOW);
+  delay(500);
+}

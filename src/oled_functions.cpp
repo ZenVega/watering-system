@@ -33,7 +33,7 @@ void displayLoading()
   display.display();
 };
 
-void displayInfo(bool online, bool watering_time, Time time, int &flashcounter, int moisture_Percentage, int water_level)
+void displayInfo(bool online, bool watering_time, Time time, int &flashcounter, int moisture_Percentage, waterlevel water_level)
 {
   display.clearDisplay();
   display.drawChar(116, 0, 0x9D, SH110X_WHITE, SH110X_BLACK, 2, 2);
@@ -74,8 +74,18 @@ void displayInfo(bool online, bool watering_time, Time time, int &flashcounter, 
 
   display.setCursor(0, 40);
   display.print("tank: ");
-  display.println(water_level);
-
+  if (water_level == full)
+  {
+    display.println("full");
+  }
+  else if (water_level == low)
+  {
+    display.println("low");
+  }
+  else
+  {
+    display.println("EMPTY!");
+  }
   display.display();
 };
 

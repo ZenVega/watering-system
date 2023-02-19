@@ -10,14 +10,22 @@
 #define AOUT_PIN_W_LEVEL_1 33
 #define W_LEVEL_POWER 25
 #define PUMP_1_SIGNAL 26
+#define REFILL_LED 27
 
-#define START_WATERING_TIME 18
+#define START_WATERING_TIME 16
 #define END_WATERING_TIME 22
 
 struct Time
 {
   int hours;
   int minutes;
+};
+
+enum waterlevel
+{
+  full,
+  low,
+  empty
 };
 
 #endif
