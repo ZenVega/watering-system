@@ -12,8 +12,6 @@ waterlevel getwaterlevel(int GPIO_pin, int POWER_IN)
     digitalWrite(POWER_IN, HIGH);
     delay(10);
     int read_value = analogRead(GPIO_pin);
-    Serial.print("read_value");
-    Serial.println(read_value);
     delay(10);
     digitalWrite(POWER_IN, LOW);
 
@@ -23,10 +21,8 @@ waterlevel getwaterlevel(int GPIO_pin, int POWER_IN)
     }
     counter++;
   }
-  Serial.print("min_value");
-  Serial.println(minValue);
 
-  if (minValue > 1500)
+  if (minValue > 1000)
   {
     returnValue = waterlevel::full;
   }

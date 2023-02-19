@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "oled_functions.h"
+#include "output/oled_functions.h"
 #include "constants.h"
-#include "watering.h"
+#include "output/watering.h"
 #include "timer_functions.h"
 
 void wake_up_and_react(bool &wakeInterruptor)
@@ -14,6 +14,7 @@ void wake_up_and_react(bool &wakeInterruptor)
   {
   case ESP_SLEEP_WAKEUP_EXT0:
     wakeInterruptor = true;
+    Serial.print("INTERRUPTOR");
     delay(1000);
     break;
   case ESP_SLEEP_WAKEUP_EXT1:
@@ -54,12 +55,28 @@ int getSecondsTillWakeUp()
   return minutes_remaining * 60;
 }
 
-void send_sleeping()
+void send_sleeping(sleeptimer reason_to_sleep)
 {
-  int seconds_to_sleep = getSecondsTillWakeUp();
+  int seconds_to_sleep;
+  switch (reason_to_sleep)
+  {
+  case sleeptimer::after_watering:
+    seconds_to_sleep = MINUTES_SLEEP_AFTER_WATERING * 60;
+    break; // and exits the switch
+  case sleeptimer::empty_tank:
+    seconds_to_sleep = MINUTES_SLEEP_EMPTY_TANK * 60;
+    break;
+  case sleeptimer::till_next_watering_time:
+    seconds_to_sleep = getSecondsTillWakeUp();
+    break;
+  }
+
   unsigned long long total_micro_seconds = seconds_to_sleep * uS_TO_S_FACTOR;
   esp_sleep_enable_timer_wakeup(seconds_to_sleep * uS_TO_S_FACTOR);
   esp_sleep_enable_ext0_wakeup(GPIO_INTERRUPT, HIGH);
+  Serial.print("sleeping for ");
+  Serial.print(seconds_to_sleep / 60);
+  Serial.println(" minutes");
   sleepAnnouncement(seconds_to_sleep);
   Serial.println("Ciao");
   digitalWrite(GPIO_OLED_VCC, LOW);

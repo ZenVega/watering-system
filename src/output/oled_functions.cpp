@@ -4,15 +4,6 @@
 #include "timer_functions.h"
 #include <string>
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 128
-
-#define OLED_MOSI 23
-#define OLED_CLK 18
-#define OLED_DC 16
-#define OLED_CS 5
-#define OLED_RESET -1
-
 using namespace std;
 
 Adafruit_SH1107 display(SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -22,7 +13,10 @@ void displayInit()
 {
   display.begin(0x3D, true); // Address 0x3D default
   display.setRotation(1);
+  display.setTextSize(2);
   display.clearDisplay();
+  display.setTextColor(SH110X_WHITE);
+  display.display();
 };
 
 void displayLoading()
@@ -97,7 +91,7 @@ void sleepAnnouncement(int seconds_to_sleep)
   display.print("sleeping for");
   display.setCursor(0, 16);
   display.print(seconds_to_sleep / 60 / 60);
-  display.println("hours");
+  display.println(" hours");
   display.display();
 
   display.setCursor(0, 40);
@@ -138,7 +132,7 @@ void displayText(const char *message)
 {
   display.clearDisplay();
   display.setTextSize(2);
-  display.setCursor(0, 4);
+  display.setCursor(0, 40);
   display.print(message);
   display.display();
 }
