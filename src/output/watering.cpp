@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "constants.h"
+#include "oled_functions.h"
 #include "deep_sleep.h"
 #include "sensors/moisture_sensor.h"
 
@@ -40,9 +41,12 @@ void wateringRoutine()
   {
     if (more_water)
     {
+      displayText("SPLISH \n   SPLASH!");
       waterForSeconds(PUMP_1_SIGNAL, SECONDS_WATERING);
-      int moisture_Percentage = readSensor(AOUT_PIN_MOISTURE_1);
-      if (moisture_Percentage > STOP_WATERING_MOISTURE_PERCENTAGE)
+      int moisture_percentage_1 = readSensor(AOUT_PIN_MOISTURE_1);
+      int moisture_percentage_2 = readSensor(AOUT_PIN_MOISTURE_2);
+      boolean go_on_watering = confirm_watering(moisture_percentage_1, moisture_percentage_2);
+      if (go_on_watering)
       {
         more_water = false;
       }

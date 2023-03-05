@@ -36,6 +36,14 @@ void IRAM_ATTR interruptCall()
   sleepInterruptor = true;
 }
 
+void update_display(Time time)
+{
+  waterlevel water_level = getwaterlevel(AOUT_PIN_W_LEVEL_1, W_LEVEL_POWER);
+  int moisture_Percentage_1 = readSensor(AOUT_PIN_MOISTURE_1);
+  int moisture_Percentage_2 = readSensor(AOUT_PIN_MOISTURE_2);
+  displayInfo(online, true, time, flashcounter, moisture_Percentage_1, moisture_Percentage_2, water_level);
+};
+
 void setup()
 {
   Serial.begin(9600);
@@ -83,11 +91,12 @@ void loop()
 
   while (water_level == empty)
   {
+    Serial.print("waterlevel: ");
+    Serial.println(water_level);
     displayText("REFILL \nTANK!");
     flashLEDs();
     emptycounter++;
-    // TODO: ROUTINELY RECHECK WATERLEVEL
-    //   water_level = getwaterlevel(AOUT_PIN_W_LEVEL_1, W_LEVEL_POWER);
+    water_level = getwaterlevel(AOUT_PIN_W_LEVEL_1, W_LEVEL_POWER);
 
     if (emptycounter > 10)
     {
@@ -100,20 +109,23 @@ void loop()
 
   if (watering_time || wakeInterruptor)
   {
-    int moisture_Percentage = readSensor(AOUT_PIN_MOISTURE_1);
-    displayInfo(online, watering_time, time, flashcounter, moisture_Percentage, water_level);
+    update_display(time);
 
     if (wakeInterruptor)
     {
       Serial.println("WakeInterruptor");
       wakeInterruptor = false;
-      delay(30000);
+      delay(20000);
       send_sleeping(till_next_watering_time);
     }
-    
-    if (moisture_Percentage < MIN_MOISTURE_PERCENTAGE)
+
+    int moisture_Percentage_1 = readSensor(AOUT_PIN_MOISTURE_1);
+    int moisture_Percentage_2 = readSensor(AOUT_PIN_MOISTURE_2);
+    boolean watering_confirmed = confirm_watering(moisture_Percentage_1, moisture_Percentage_2);
+    if (watering_confirmed)
     {
       wateringRoutine();
+      update_display(time);
     }
     delay(10000);
     send_sleeping(after_watering);
@@ -123,5 +135,4 @@ void loop()
   {
     send_sleeping(till_next_watering_time);
   }
-
 };
